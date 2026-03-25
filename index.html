@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CerâmiCalc Torres - Calculadora de Cerâmica Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --card-bg: #121214;
+            --input-bg: #1c1c1e;
+            --accent-color: #facc15;
+            --accent-glow: rgba(250, 204, 21, 0.2);
+            --secondary-accent: #a855f7;
+            --secondary-glow: rgba(168, 85, 247, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-color: #27272a;
+            --card-radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeIn 0.8s ease-out;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .main-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-radius);
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            opacity: 0.5;
+        }
+
+        .main-card.secondary::before {
+            background: linear-gradient(90deg, transparent, var(--secondary-accent), transparent);
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .section-header svg {
+            width: 24px;
+            height: 24px;
+            color: var(--secondary-accent);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .secondary .section-title::before {
+            background-color: var(--secondary-accent);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+
+        .input-group .hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        input {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            width: 100%;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .secondary input:focus {
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 0 4px var(--secondary-glow);
+        }
+
+        .results-row {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .result-card {
+            background: linear-gradient(145deg, #1e1e22 0%, #161618 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: var(--transition);
+            cursor: default;
+        }
+
+        .column .result-card {
+            margin-top: auto;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(250, 204, 21, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .secondary .result-card:hover {
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .result-card.highlight {
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 20px -5px var(--secondary-glow);
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .result-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 4px;
+            text-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+        }
+
+        .secondary .result-value {
+            color: var(--text-primary);
+        }
+
+        .highlight .result-value {
+            color: #d8b4fe;
+        }
+
+        .result-unit {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-card {
+                grid-template-columns: 1fr;
+                padding: 30px;
+                gap: 50px;
+            }
+
+            .results-row {
+                grid-template-columns: 1fr;
+                grid-column: span 1;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .result-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>CerâmiCalc Torres</h1>
+            <p>Calculadora Técnica de Revestimentos</p>
+        </header>
+
+        <!-- Módulo 1: Peças por Caixa -->
+        <main class="main-card">
+            <div class="column">
+                <h2 class="section-title">Informações da Caixa</h2>
+                
+                <div class="input-group">
+                    <label for="m2Caixa">m² por Caixa</label>
+                    <input type="number" id="m2Caixa" value="1.68" step="0.01" placeholder="Ex: 1.68">
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Peças por Caixa</div>
+                    <div class="result-value" id="resPecas" style="font-size: 3rem;">5</div>
+                    <div class="result-unit">Unidades</div>
+                </div>
+            </div>
+
+            <div class="column">
+                <h2 class="section-title">Dimensões da Peça (cm)</h2>
+                
+                <div class="input-group">
+                    <label for="ladoA">Lado A (cm)</label>
+                    <input type="number" id="ladoA" value="58" step="0.1" placeholder="Ex: 58">
+                </div>
+
+                <div class="input-group">
+                    <label for="ladoB">Lado B (cm)</label>
+                    <input type="number" id="ladoB" value="58" step="0.1" placeholder="Ex: 58">
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Área da Peça</div>
+                    <div class="result-value" id="resArea">0.3364</div>
+                    <div class="result-unit">Calculado (m²)</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Módulo 2: Argamassa e Rejunte -->
+        <section class="main-card secondary">
+            <div class="column" style="grid-column: span 2; gap: 32px;">
+                <div class="section-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <h2 class="section-title" style="font-size: 1.5rem;">Argamassa e Rejunte</h2>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--text-primary);">Dados da Obra</h3>
+                        <label for="areaTotal">Área Total (m²)</label>
+                        <input type="number" id="areaTotal" value="10" step="1" placeholder="Ex: 10">
+                    </div>
+
+                    <div class="input-group">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--text-primary);">Configuração</h3>
+                        <label for="rendimento">Rendimento (m²/saco)</label>
+                        <input type="number" id="rendimento" value="3" step="0.1" placeholder="Ex: 3">
+                        <span class="hint">Padrão utilizado na planilha: 3.00</span>
+                    </div>
+                </div>
+
+                <div class="results-row">
+                    <div class="result-card highlight">
+                        <div class="result-label">Argamassa Necessária</div>
+                        <div class="result-value" id="resMortar">4</div>
+                        <div class="result-unit">Unidades (Sacos)</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">Rejunte (100%)</div>
+                        <div class="result-value" id="resGrout100">4</div>
+                        <div class="result-unit">Unidades</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">Rejunte (60%)</div>
+                        <div class="result-value" id="resGrout60">3</div>
+                        <div class="result-unit">Unidades (Ajustado)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            Desenvolvido por Sanzony Tech 2026
+        </footer>
+    </div>
+
+    <script>
+        // Módulo 1 Elements
+        const m2Input = document.getElementById('m2Caixa');
+        const ladoAInput = document.getElementById('ladoA');
+        const ladoBInput = document.getElementById('ladoB');
+        const resPecas = document.getElementById('resPecas');
+        const resArea = document.getElementById('resArea');
+
+        // Módulo 2 Elements
+        const areaTotalInput = document.getElementById('areaTotal');
+        const rendimentoInput = document.getElementById('rendimento');
+        const resMortar = document.getElementById('resMortar');
+        const resGrout100 = document.getElementById('resGrout100');
+        const resGrout60 = document.getElementById('resGrout60');
+
+        function calculateCeramic() {
+            const m2Caixa = parseFloat(m2Input.value) || 0;
+            const ladoA = parseFloat(ladoAInput.value) || 0;
+            const ladoB = parseFloat(ladoBInput.value) || 0;
+
+            if (m2Caixa > 0 && ladoA > 0 && ladoB > 0) {
+                const ladoA_m = ladoA / 100;
+                const ladoB_m = ladoB / 100;
+                const areaPeca = ladoA_m * ladoB_m;
+                const pecasPorCaixa = Math.round(m2Caixa / areaPeca);
+
+                resArea.textContent = areaPeca.toFixed(4);
+                resPecas.textContent = pecasPorCaixa;
+            } else {
+                resArea.textContent = '0.0000';
+                resPecas.textContent = '0';
+            }
+        }
+
+        function calculateMaterials() {
+            const areaTotal = parseFloat(areaTotalInput.value) || 0;
+            const rendimento = parseFloat(rendimentoInput.value) || 0;
+
+            if (areaTotal > 0 && rendimento > 0) {
+                const mortarNeeded = Math.ceil(areaTotal / rendimento);
+                const grout100 = Math.ceil(areaTotal * 0.4);
+                const grout60 = Math.ceil(grout100 * 0.6);
+
+                resMortar.textContent = mortarNeeded;
+                resGrout100.textContent = grout100;
+                resGrout60.textContent = grout60;
+            } else {
+                resMortar.textContent = '0';
+                resGrout100.textContent = '0';
+                resGrout60.textContent = '0';
+            }
+        }
+
+        // Event listeners
+        [m2Input, ladoAInput, ladoBInput].forEach(input => {
+            input.addEventListener('input', calculateCeramic);
+        });
+
+        [areaTotalInput, rendimentoInput].forEach(input => {
+            input.addEventListener('input', calculateMaterials);
+        });
+
+        // Initialize
+        calculateCeramic();
+        calculateMaterials();
+    </script>
+</body>
+</html>
